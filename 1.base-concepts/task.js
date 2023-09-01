@@ -11,16 +11,16 @@ function solveEquation(a, b, c) {
   let x = (-b + Math.sqrt(d))/ (2*a);
   let y = (-b - Math.sqrt(d))/ (2*a);
   arr.push(x,y);
-}
+};
 return arr;
-}
+};
 
 function calculateTotalMortgage(percent, contribution, amount, countMonths) {
-  let P = percent / 100 / 12;
-  let S = amount - contribution; 
-  let n = countMonths;
+  let interestRate = percent / 100 / 12;
+  let loanBody = amount - contribution; 
+  let totalMonth = countMonths;
 
-  let summPerMonth = S * (P+ (P / (((1 + P)**n) -1)));
+  let summPerMonth = loanBody * (interestRate+ (interestRate / (((1 + interestRate)**totalMonth) -1)));
   let total = +(summPerMonth*countMonths).toFixed(2);
   return total;
 };
