@@ -5,17 +5,17 @@ class AlarmClock {
     }
 
     addClock(time, callback) {
+
         if (!time || !callback) {
             throw new Error('Отсутствуют обязательные аргументы');
         }
         
-        this.alarmCollection.some(value => {
-            if(value.time === time) {
+        let hasAlarm = this.alarmCollection.some(value => {
+            value.time===time})
+            if(hasAlarm) {
                 console.warn('Уже присутствует звонок на это же время')
-            }
-            console.log('for', value.time)
-        })
-   
+            console.log('for', value.time)}
+
         this.alarmCollection.push({callback: callback, time: time, canCall: true})
     }
 
@@ -24,16 +24,15 @@ class AlarmClock {
     }
 
     getCurrentFormattedTime() {
-        let date = new Date().toLocaleTimeString('ru-Ru', {
+        return new Date().toLocaleTimeString('ru-Ru', {
             hour: '2-digit',
             minute: '2-digit',
         });
-        return date;
     }
 
     start() {
         if (!this.intervalId) {
-            setInterval(() => {
+            this.intervalId = setInterval(() => {
                 this.alarmCollection.forEach(value => {
                     if(value.time === this.getCurrentFormattedTime() && value.canCall===true) {
                         value.canCall = false;
@@ -47,7 +46,7 @@ class AlarmClock {
 
     stop() {
         clearInterval(this.intervalId);
-        this.intervalId= null;
+        this.intervalId = null;
     }
     
     resetAllCalls() {
