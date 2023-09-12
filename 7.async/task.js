@@ -1,20 +1,20 @@
 class AlarmClock {
-    constructor (alarmCollection=[], intervalId=null) {
-        this.alarmCollection = alarmCollection;
-        this.intervalId = intervalId;
+    constructor () {
+        this.alarmCollection = [];
+        this.intervalId = null;
     }
 
     addClock(time, callback) {
         if (!time || !callback) {
             throw new Error('Отсутствуют обязательные аргументы');
         }
-   
-        for (let value of this.alarmCollection) {
-            console.log("for", value.time)
-            if (value.time === time) {
+        
+        this.alarmCollection.some(value => {
+            if(value.time === time) {
                 console.warn('Уже присутствует звонок на это же время')
             }
-        }
+            console.log('for', value.time)
+        })
    
         this.alarmCollection.push({callback: callback, time: time, canCall: true})
     }
@@ -24,21 +24,24 @@ class AlarmClock {
     }
 
     getCurrentFormattedTime() {
-        let date = new Date;
-        return date.getHours().toString() + ':' + date.getMinutes().toString(); 
+        let date = new Date().toLocaleTimeString('ru-Ru', {
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+        return date;
     }
 
     start() {
         if (!this.intervalId) {
-            let idStarter = setInterval(() => {
-                this.alarmCollection.forEach((value, index) => {
+            setInterval(() => {
+                this.alarmCollection.forEach(value => {
                     if(value.time === this.getCurrentFormattedTime() && value.canCall===true) {
-                        this.alarmCollection[index].canCall = false;
+                        value.canCall = false;
                         value.callback();
                     }
                 })
             }, 1000);
-            this.intervalId = idStarter;
+        
         }
     }
 
@@ -48,13 +51,13 @@ class AlarmClock {
     }
     
     resetAllCalls() {
-        this.alarmCollection.forEach((value, index) => {
-            this.alarmCollection[index].canCall = true;
+        this.alarmCollection.forEach(value => {
+            value.canCall = true;
         });
     }
 
     clearAlarms() {
-        stop()
+        this.stop()
         this.alarmCollection=[];
     }
 }
